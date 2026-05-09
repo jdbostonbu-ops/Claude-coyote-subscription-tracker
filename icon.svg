@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Midnight background -->
+  <rect width="512" height="512" rx="96" fill="#0F1419"/>
+
+  <!-- Moon: gold crescent in upper area -->
+  <circle cx="350" cy="160" r="60" fill="#E0A458"/>
+  <circle cx="370" cy="150" r="55" fill="#0F1419"/>
+
+  <!-- Coyote silhouette: stylized howling form -->
+  <!-- Body sweeping curve -->
+  <path d="M 130 400
+           Q 130 320, 180 290
+           Q 200 280, 220 290
+           L 240 280
+           Q 245 270, 250 270
+           L 260 220
+           Q 270 210, 280 215
+           L 285 240
+           L 295 230
+           Q 300 220, 305 230
+           L 310 260
+           L 320 280
+           Q 325 295, 320 310
+           L 305 320
+           Q 290 325, 280 335
+           Q 250 360, 220 380
+           Q 200 395, 180 410
+           L 130 420
+           Z"
+        fill="#E8DCC4" opacity="0.95"/>
+
+  <!-- Coyote eye -->
+  <circle cx="295" cy="245" r="3" fill="#0F1419"/>
+
+  <!-- Ground line — sage horizon -->
+  <rect x="60" y="420" width="392" height="3" fill="#6B7257" opacity="0.5"/>
+
+  <!-- Tiny stars -->
+  <circle cx="120" cy="120" r="2" fill="#E8DCC4"/>
+  <circle cx="180" cy="80"  r="1.5" fill="#E8DCC4"/>
+  <circle cx="240" cy="140" r="1" fill="#E8DCC4"/>
+  <circle cx="450" cy="100" r="1.5" fill="#E8DCC4"/>
+  <circle cx="80"  cy="200" r="1" fill="#E8DCC4"/>
+</svg>

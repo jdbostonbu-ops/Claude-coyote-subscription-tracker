@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F1419">
+<meta name="description" content="Coyote — catch the trial before it bills. Track free trials and subscriptions, get notified before charges hit.">
+
+<title>Coyote — Catch the trial before it bills</title>
+
+<!-- PWA: manifest + iOS-specific install metadata -->
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Coyote">
+
+<!-- Fonts: Fraunces for wordmark/display, Inter for UI body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     APP SHELL — top bar with brand mark, status, install button
+     ═══════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="brand">
+    <h1 class="wordmark">Coy<span class="wordmark-o">o</span>te</h1>
+    <p class="tagline">Catch the trial before it bills. Keep track of all subscriptions.</p>
+    <img src="icon-192.png">
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="installBtn" aria-label="Install app" hidden>
+      <span aria-hidden="true">⬇</span>
+      <span class="icon-btn-label">Install</span>
+    </button>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════
+     MAIN — stat dashboard, list of subscriptions, empty state
+     ═══════════════════════════════════════════════════════════ -->
+<main class="lab">
+
+  <!-- ── DASHBOARD STATS ── -->
+  <section class="stats" aria-label="Subscription summary">
+    <div class="stat-card">
+      <span class="stat-label">Active trials</span>
+      <span class="stat-num" id="statActive">0</span>
+      <span class="stat-sub" id="statActiveSub">Add one to start</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Monthly cost</span>
+      <span class="stat-num" id="statCost">$0</span>
+      <span class="stat-sub" id="statCostSub">Across all active</span>
+    </div>
+    <div class="stat-card stat-warn" id="statWarnCard">
+      <span class="stat-label">Ending soon</span>
+      <span class="stat-num" id="statWarn">0</span>
+      <span class="stat-sub" id="statWarnSub">Within 24 hours</span>
+    </div>
+  </section>
+
+  <!-- ── ACTION BAR ── -->
+  <section class="action-bar">
+    <button class="btn btn-primary" id="addBtn">
+      <span aria-hidden="true">+</span>
+      <span>Add subscription</span>
+    </button>
+    <button class="btn btn-ghost" id="notifyBtn">
+      <span aria-hidden="true">🔔</span>
+      <span>Request notifications</span>
+    </button>
+    <button class="btn btn-ghost" id="captureBtn">
+      <span aria-hidden="true">📲</span>
+      <span>Capture from anywhere</span>
+    </button>
+  </section>
+
+  <!-- ── SUBSCRIPTION LIST / EMPTY STATE ── -->
+  <section class="subs" id="subsList" aria-label="Your subscriptions"></section>
+
+  <div class="empty-state" id="emptyState">
+    <div class="empty-mark" aria-hidden="true">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <!-- Stylized crescent moon / coyote eye -->
+        <circle cx="32" cy="32" r="28" stroke="#E0A458" stroke-width="1" opacity="0.3"/>
+        <path d="M40 16 a20 20 0 1 0 0 32 a14 14 0 1 1 0 -32 z" fill="#E0A458" opacity="0.9"/>
+      </svg>
+    </div>
+    <h2 class="empty-title">Nothing tracked yet.</h2>
+    <p class="empty-sub">Add your first subscription or trial — Coyote will remind you before you get charged.</p>
+  </div>
+
+</main>
+
+<!-- ════════════════════════════════════════════════════════════
+     ADD-SUBSCRIPTION MODAL
+     "Do you want me to remember this?" yes/no flow lives here.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="addModal" hidden role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
+  <div class="modal">
+    <header class="modal-header">
+      <h2 id="addModalTitle">Did you just sign up?</h2>
+      <button class="icon-btn modal-close" id="addCloseBtn" data-close-modal aria-label="Close">×</button>
+    </header>
+    <p class="modal-sub">I'll remember it for you and warn you before you get charged.</p>
+
+    <form id="addForm" class="add-form" novalidate>
+
+      <div class="field">
+        <label for="fName">Service name</label>
+        <input type="text" id="fName" maxlength="60" required
+               placeholder="Netflix, Notion AI, etc."
+               autocomplete="off" spellcheck="false">
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="fCost">Monthly cost ($)</label>
+          <input type="number" id="fCost" min="0" step="0.01" required
+                 placeholder="9.99" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="fExpires">Trial ends</label>
+          <input type="date" id="fExpires" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="fUrl">URL (optional)</label>
+        <input type="url" id="fUrl" maxlength="500"
+               placeholder="https://netflix.com/account"
+               autocomplete="off" spellcheck="false">
+      </div>
+
+      <!-- The yes/no question — gates whether we save -->
+      <fieldset class="remember-fieldset">
+        <legend>Want me to remember this?</legend>
+        <div class="remember-options">
+          <label class="remember-opt">
+            <input type="radio" name="remember" value="yes" checked>
+            <span class="remember-label">
+              <strong>Yes</strong>
+              <small>Remind me each month, warn me 24h before charge</small>
+            </span>
+          </label>
+          <label class="remember-opt">
+            <input type="radio" name="remember" value="no">
+            <span class="remember-label">
+              <strong>No, just close</strong>
+              <small>Don't save anything</small>
+            </span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="cancelBtn" data-close-modal>Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">Save it</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     CAPTURE EXPLAINER MODAL — Share Target + PWA install path
+     ═══════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="captureModal" hidden role="dialog" aria-modal="true" aria-labelledby="captureTitle">
+  <div class="modal">
+    <header class="modal-header">
+      <h2 id="captureTitle">Capture from anywhere</h2>
+      <button class="icon-btn modal-close" id="captureCloseBtn" data-close-modal aria-label="Close">×</button>
+    </header>
+    <p class="modal-sub">Install Coyote and it appears in your phone's Share menu. Hit Share on any signup page → pick Coyote → the form opens with the URL and page title pre-filled.</p>
+
+    <div class="capture-flow">
+      <div class="flow-step">
+        <span class="flow-num">1</span>
+        <div class="flow-body">
+          <strong>Install Coyote</strong>
+          <p>Click the <strong>⬇ Install</strong> button at the top of this page. On iPhone, tap Share in Safari, then "Add to Home Screen."</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">2</span>
+        <div class="flow-body">
+          <strong>Sign up for a free trial</strong>
+          <p>Use any service you want to try — Hulu, Netflix, Notion, anything.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">3</span>
+        <div class="flow-body">
+          <strong>Share the page to Coyote</strong>
+          <p>Tap the Share icon (the square with the up-arrow on iPhone, or the three-dot menu → Share on Android/desktop). Pick <strong>Coyote</strong> from the list.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">4</span>
+        <div class="flow-body">
+          <strong>Add cost + end date</strong>
+          <p>Coyote opens with the URL and page title pre-filled. You only need to enter the monthly cost and trial end date, then save.</p>
+        </div>
+      </div>
+    </div>
+
+    <details class="capture-help">
+      <summary>What if I'm on desktop?</summary>
+      <p>On Mac or Windows, install Coyote as a desktop app (the <strong>⬇ Install</strong> button at the top works in Chrome and Edge). The installed app pins to your dock or taskbar. When you finish a signup, you can copy the URL and use the <strong>+ Add subscription</strong> button manually — takes about ten seconds total.</p>
+      <p>Coyote also remembers everything across devices automatically when you use the same browser.</p>
+    </details>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-primary" id="captureDoneBtn" data-close-modal>Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     CALENDAR REMINDER MODAL — three choices
+     ═══════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="calendarModal" hidden role="dialog" aria-modal="true" aria-labelledby="calendarTitle">
+  <div class="modal modal-narrow">
+    <header class="modal-header">
+      <h2 id="calendarTitle">Add reminder to calendar</h2>
+      <button class="icon-btn modal-close" id="calendarCloseBtn" data-close-modal aria-label="Close">×</button>
+    </header>
+    <p class="modal-sub">A reminder will fire 24 hours before your trial ends — on whatever device your calendar syncs to.</p>
+
+    <div class="cal-choices">
+      <a class="cal-choice" id="calGoogleBtn" target="_blank" rel="noopener noreferrer">
+        <span class="cal-icon" aria-hidden="true">G</span>
+        <span class="cal-label">
+          <strong>Google Calendar</strong>
+          <small>Opens calendar.google.com</small>
+        </span>
+      </a>
+      <a class="cal-choice" id="calOutlookBtn" target="_blank" rel="noopener noreferrer">
+        <span class="cal-icon" aria-hidden="true">O</span>
+        <span class="cal-label">
+          <strong>Outlook</strong>
+          <small>Opens outlook.live.com</small>
+        </span>
+      </a>
+      <button type="button" class="cal-choice" id="calIcsBtn">
+        <span class="cal-icon" aria-hidden="true">📅</span>
+        <span class="cal-label">
+          <strong>Apple Calendar / Other</strong>
+          <small>Downloads .ics file</small>
+        </span>
+      </button>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" data-close-modal>Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     TOAST — small confirmation feedback at bottom
+     ═══════════════════════════════════════════════════════════ -->
+<div class="toast" id="toast" aria-live="polite" aria-atomic="true" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>
