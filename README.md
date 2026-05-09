@@ -210,5 +210,5 @@ Coyote is what I built during Phase I of Thinking with AI — a single, focused 
 ⭐ Love this project? Give it a star and explore the other deployed projects in this portfolio.
 
 <p align="center">
-  <img src="favicon.svg" alt="Coyote Logo" width="240">
+  <img src="icon-192.png" alt="Coyote Logo" width="240">
 </p>
