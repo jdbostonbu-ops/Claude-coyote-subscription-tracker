@@ -207,6 +207,56 @@ There's no build step, no `npm install`, no backend to run. Coyote is plain HTML
 
 Coyote is what I built during Phase I of Thinking with AI — a single, focused tool that solves one real problem (the surprise trial charge) using only the browser, with no backend, no API key, no account, and a calendar-export system reliable enough to live across every device the user owns.
 
+## How to add the url to the Bookmark Manager:
+**Easiest method — use the address bar instead of the bookmarks manager:**
+
+1. Click the three-dot menu (top-right of Chrome, looks like ⋮) → Bookmarks and lists → Bookmark manager
+2. Once inside the bookmark manager, click the three-dot menu in the top-right corner of the bookmark manager itself (NOT the Chrome menu — the one inside the manager page) → Add new bookmark
+
+**OR even easier:**
+
+1. Open any random page in a tab
+2. Click the ★ star icon in Chrome's address bar to bookmark that page
+3. In the dialog that pops up, click Edit
+4. Now you have a bookmark you can edit. Replace the URL with the bookmarklet code (paste it)
+5. Rename to "Capture to Coyote"
+6. Save
+
+**Or the fastest method of all — use Chrome's hidden keyboard shortcut to add a bookmark:**
+
+1. Make sure you're on any tab (not the bookmarks manager page)
+2. Press Cmd+D (Mac) or Ctrl+D (Windows) — this opens the "Add bookmark" dialog
+3. Click Edit more... at the bottom of that dialog
+4. Replace the URL with the bookmarklet code (paste)
+5. Set the name to "Capture to Coyote"
+6. Save
+
+## How to use Coyote:
+1. You're on auth.hulu.com/web/create-account/...
+2. Click the Capture to Coyote bookmark in your bookmarks bar
+3. A new Chrome tab opens. URL contains ?prefill=1&url=...&name=...
+4. Coyote loads, and immediately the Add Subscription modal pops up, with "Hulu" already typed in the Service Name field and the Hulu URL already filled in the URL field
+5. You only need to add the monthly cost ($14.99 or whatever) and trial end date, then hit Save
+6. The card appears on your dashboard, countdown ticking
+
+## Install Coyote:
+
+**Mac desktop:**
+1. Visit Coyote in Chrome or Edge
+2. Click the ⬇ Install button at the top right
+3. Coyote becomes a desktop app
+4. Now go sign up for any free trial — when you finish, on the confirmation page click the URL bar's Share button (or use Mac's system Share menu)
+5. Coyote should appear as a destination
+6. Pick it → Coyote opens with the URL pre-filled in the Add form
+
+**iPhone:**
+1. Visit Coyote in Safari
+2. Tap Share → Add to Home Screen
+3. Now go sign up for any trial in Safari
+4. On the confirmation page, tap Share
+5. Coyote should appear in the share sheet
+6. Tap it → Coyote opens with URL+title pre-filled
+
 ⭐ Love this project? Give it a star and explore the other deployed projects in this portfolio.
 
 <p align="center">
