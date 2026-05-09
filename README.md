@@ -10,7 +10,7 @@ A subscription and free-trial tracker built for the moment that always catches y
 🚀 **[Try the Live App](https://jdbostonbu-ops.github.io/Claude-coyote-subscription-tracker/)**
 
 <p align="center">
-  <img src="Coyote.gif" alt="Coyote Showcase Demo" width="300">
+  <img src="Coyote.gif" alt="Coyote Showcase Demo" width="750">
 </p>
 
 ## 🎨 Brand Identity — Theme & Font Choices
